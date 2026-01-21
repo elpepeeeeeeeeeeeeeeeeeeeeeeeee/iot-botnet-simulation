@@ -1,7 +1,0 @@
-captue and file
-
-cd "M:\CCNS project work\project\iot-botnet-simulation"
-Unblock-File .\collect_and_package.ps1
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
-# run (include switches as desired)
-.\collect_and_package.ps1 -IncludeLogs -CreateFilteredPcaps

@@ -1,4 +1,0 @@
-   11   0.000796    127.0.0.1 ÔåÆ 127.0.0.1    MQTT 94 Connect Command
-   12   0.000803    127.0.0.1 ÔåÆ 127.0.0.1    MQTT 95 Connect Command
-   15   0.001146    127.0.0.1 ÔåÆ 127.0.0.1    MQTT 76 Connect Ack
-   18   0.001587    127.0.0.1 ÔåÆ 127.0.0.1    MQTT 76 Connect Ack

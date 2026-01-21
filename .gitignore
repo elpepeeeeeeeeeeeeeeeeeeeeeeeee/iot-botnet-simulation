@@ -1,8 +1,27 @@
+# Python
 __pycache__/
+*.pyc
+
+# Logs
 *.log
+*.txt
+
+# Packet captures
 *.pcap
 *.pcapng
-suricata_output/
+
+# Results / archives
+*.zip
+iot-sim-results*/
+
+# IDS outputs
+suricata_out/
+suricata-output/
 zeek_out/
+
+# MQTT temp
 mosq-tmp/
+
+# OS
 .DS_Store
+Thumbs.db

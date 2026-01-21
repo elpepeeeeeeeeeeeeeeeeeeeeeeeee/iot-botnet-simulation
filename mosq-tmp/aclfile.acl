@@ -1,4 +1,0 @@
-topic read $SYS/#
-topic write devices/+/telemetry
-topic write c2/heartbeat
-# block everything else (e.g., c2/commands/#)

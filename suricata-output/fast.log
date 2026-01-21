@@ -1,4 +1,0 @@
-11/01/2025-21:46:39.006729  [**] [1:2000001:1] TCP traffic to victim (demo) [**] [Classification: (null)] [Priority: 3] {TCP} 127.0.0.1:60488 -> 127.0.0.1:8080
-11/01/2025-21:46:38.696689  [**] [1:2000001:1] TCP traffic to victim (demo) [**] [Classification: (null)] [Priority: 3] {TCP} 127.0.0.1:47774 -> 127.0.0.1:8080
-11/01/2025-21:46:39.312875  [**] [1:2000001:1] TCP traffic to victim (demo) [**] [Classification: (null)] [Priority: 3] {TCP} 127.0.0.1:60498 -> 127.0.0.1:8080
-11/01/2025-21:46:38.390031  [**] [1:2000001:1] TCP traffic to victim (demo) [**] [Classification: (null)] [Priority: 3] {TCP} 127.0.0.1:47770 -> 127.0.0.1:8080

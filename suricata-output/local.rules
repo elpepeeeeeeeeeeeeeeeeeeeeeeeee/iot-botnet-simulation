@@ -1,2 +1,0 @@
-alert tcp any any -> any 8080 (msg:"TCP traffic to victim (demo)"; content:"GET"; nocase; sid:2000001; rev:1;)
-alert tcp any any -> any 1883 (msg:"MQTT traffic (demo)"; sid:2000002; rev:1;)
