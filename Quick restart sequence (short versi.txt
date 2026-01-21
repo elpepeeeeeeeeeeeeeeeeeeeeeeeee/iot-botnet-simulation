@@ -1,0 +1,30 @@
+Quick restart sequence (short version) — what to do after laptop reboot
+
+If you just want the minimal steps to get the simulation back up and test:
+
+Admin tab:
+
+cd "M:\CCNS project work\project\iot-botnet-simulation"
+docker-compose up -d
+docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
+
+
+Wait ~5–10s, then confirm C2 connected:
+
+docker logs -f iot-botnet-simulation-c2-1 --tail=50
+# expect: MQTT on_connect rc=0
+
+
+MQTT tab — confirm telemetry one-shot:
+
+docker-compose exec mosquitto mosquitto_sub -t 'devices/data' -C 1
+
+
+Publish attack and watch:
+
+MQTT tab:
+
+docker-compose exec mosquitto mosquitto_pub -t 'c2/commands' -m 'do_attack'
+
+
+Watch C2 tab and victim tab logs for GETs.

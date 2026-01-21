@@ -1,0 +1,126 @@
+﻿<#
+start_and_capture_headless.ps1
+Starts the compose stack, optionally rebuilds c2/device, starts tcpdump in victim,
+publishes do_attack, copies pcap to host, saves logs and creates a zip.
+
+Usage:
+  cd "M:\CCNS project work\project\iot-botnet-simulation"
+  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+  .\start_and_capture_headless.ps1          # default CaptureCount = 50
+  .\start_and_capture_headless.ps1 -Rebuild -CaptureCount 100
+#>
+
+param(
+  [switch]$Rebuild = $false,
+  [int]$CaptureCount = 50,
+  [string]$ProjectPath = "M:\CCNS project work\project\iot-botnet-simulation"
+)
+
+Set-StrictMode -Version Latest
+
+function Fail($msg) {
+  Write-Host $msg -ForegroundColor Red
+  exit 1
+}
+
+if (-not (Test-Path $ProjectPath)) { Fail "Project path '$ProjectPath' not found. Edit -ProjectPath if different." }
+
+Set-Location $ProjectPath
+
+# quick docker sanity
+try {
+  docker version > $null 2>&1
+} catch {
+  Fail "Docker not available. Start Docker Desktop and re-run."
+}
+
+if ($Rebuild) {
+  Write-Host "Rebuilding c2 & device images (no-cache)..." -ForegroundColor Cyan
+  docker-compose build --no-cache c2 device
+  if ($LASTEXITCODE -ne 0) { Fail "docker-compose build failed." }
+}
+
+Write-Host "Starting docker-compose up -d ..." -ForegroundColor Cyan
+docker-compose up -d
+if ($LASTEXITCODE -ne 0) { Fail "docker-compose up -d failed." }
+
+# wait a few seconds for services to settle
+Start-Sleep -Seconds 5
+
+Write-Host "Containers status:" -ForegroundColor Yellow
+docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}"
+
+# attempt to install tcpdump inside victim (best-effort)
+Write-Host "Attempting apt-get install tcpdump inside victim (may take a moment)..." -ForegroundColor Cyan
+docker exec -u 0 victim sh -c "apt-get update >/dev/null 2>&1 && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump >/dev/null 2>&1"
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "Warning: apt install may have failed. You can install manually:" -ForegroundColor Yellow
+  Write-Host "  docker exec -it victim sh -c 'apt-get update && apt-get install -y tcpdump'" -ForegroundColor Yellow
+}
+
+# start tcpdump in background inside victim
+$timestamp = (Get-Date).ToString("yyyyMMdd_HHmmss")
+$pcapInside = "/tmp/victim_capture_$timestamp.pcap"
+Write-Host "Starting tcpdump inside victim capturing $CaptureCount packets to $pcapInside ..." -ForegroundColor Cyan
+docker exec -d victim sh -c "tcpdump -i any port 8080 -w $pcapInside -c $CaptureCount"
+
+# give tcpdump a moment to start
+Start-Sleep -Seconds 2
+
+# quick confirm tcpdump
+Write-Host "Confirming tcpdump process (docker top victim)..." -ForegroundColor Cyan
+docker top victim
+
+# publish do_attack via mosquitto (compose exec)
+Write-Host "Publishing 'do_attack' to c2/commands..." -ForegroundColor Cyan
+docker-compose exec mosquitto mosquitto_pub -t 'c2/commands' -m 'do_attack'
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "Warning: publishing failed. You can publish manually: docker-compose exec mosquitto mosquitto_pub -t 'c2/commands' -m 'do_attack'" -ForegroundColor Yellow
+}
+
+# Wait until tcpdump finishes (poll)
+Write-Host "Waiting for tcpdump to finish capturing..." -ForegroundColor Cyan
+while ($true) {
+  Start-Sleep -Seconds 1
+  $topOut = docker top victim 2>&1
+  if ($topOut -match "tcpdump") { continue } else { break }
+}
+Write-Host "tcpdump finished or not running." -ForegroundColor Green
+
+# copy pcap to host
+$localPcapName = "victim_capture_$timestamp.pcap"
+$localPcapPath = Join-Path -Path $ProjectPath -ChildPath $localPcapName
+Write-Host "Copying $pcapInside -> $localPcapPath" -ForegroundColor Cyan
+docker cp "victim:$pcapInside" $localPcapPath
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "Warning: docker cp failed. Check inside container whether pcap exists." -ForegroundColor Yellow
+} else {
+  Write-Host "Copied pcap to $localPcapPath" -ForegroundColor Green
+}
+
+# save logs
+Write-Host "Saving service logs to project folder..." -ForegroundColor Cyan
+$logFiles = @{
+  c2      = Join-Path $ProjectPath "c2_logs.txt"
+  device  = Join-Path $ProjectPath "device_logs.txt"
+  mosquitto = Join-Path $ProjectPath "mosquitto_logs.txt"
+  victim  = Join-Path $ProjectPath "victim_logs.txt"
+}
+docker logs iot-botnet-simulation-c2-1 --tail=2000 > $logFiles.c2 2>&1
+docker logs iot-botnet-simulation-device-1 --tail=2000 > $logFiles.device 2>&1
+docker logs mosquitto --tail=2000 > $logFiles.mosquitto 2>&1
+docker logs victim --tail=2000 > $logFiles.victim 2>&1
+
+# zip results
+$zipName = Join-Path -Path $ProjectPath -ChildPath ("iot-sim-results_$timestamp.zip")
+try {
+  Compress-Archive -Path $localPcapPath, $logFiles.c2, $logFiles.device, $logFiles.mosquitto, $logFiles.victim -DestinationPath $zipName -Force
+  Write-Host "Created results zip: $zipName" -ForegroundColor Green
+} catch {
+  Write-Host "Compress-Archive failed; files exist individually in project folder." -ForegroundColor Yellow
+}
+
+Write-Host "Files saved in $($ProjectPath):" -ForegroundColor White
+Get-ChildItem -Path $ProjectPath -Include "victim_capture*.pcap","*.txt","*.zip" -File | Select-Object Name,Length,LastWriteTime | Format-Table
+
+Write-Host "Done." -ForegroundColor Green

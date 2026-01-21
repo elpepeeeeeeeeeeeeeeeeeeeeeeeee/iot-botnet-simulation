@@ -1,0 +1,8 @@
+__pycache__/
+*.log
+*.pcap
+*.pcapng
+suricata_output/
+zeek_out/
+mosq-tmp/
+.DS_Store

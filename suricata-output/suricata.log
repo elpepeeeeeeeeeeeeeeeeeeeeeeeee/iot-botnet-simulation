@@ -1,0 +1,98 @@
+[1 - Suricata-Main] 2025-11-01 22:04:30 Notice: suricata: This is Suricata version 8.0.1 RELEASE running in USER mode
+[1 - Suricata-Main] 2025-11-01 22:04:30 Info: cpu: CPUs/cores online: 12
+[1 - Suricata-Main] 2025-11-01 22:04:30 Info: suricata: Setting engine mode to IDS mode by default
+[1 - Suricata-Main] 2025-11-01 22:04:30 Info: exception-policy: master exception-policy set to: auto
+[1 - Suricata-Main] 2025-11-01 22:04:30 Info: logopenfile: fast output device (regular) initialized: fast.log
+[1 - Suricata-Main] 2025-11-01 22:04:30 Info: logopenfile: eve-log output device (regular) initialized: eve.json
+[1 - Suricata-Main] 2025-11-01 22:04:30 Info: logopenfile: stats output device (regular) initialized: stats.log
+[1 - Suricata-Main] 2025-11-01 22:04:30 Warning: detect: No rule files match the pattern /var/lib/suricata/rules/suricata.rules
+[1 - Suricata-Main] 2025-11-01 22:04:30 Warning: detect: 1 rule files specified, but no rules were loaded!
+[1 - Suricata-Main] 2025-11-01 22:04:30 Info: threshold-config: Threshold config parsed: 0 rule(s) found
+[1 - Suricata-Main] 2025-11-01 22:04:30 Info: detect: 0 signatures processed. 0 are IP-only rules, 0 are inspecting packet payload, 0 inspect application layer, 0 are decoder event only
+[1 - Suricata-Main] 2025-11-01 22:04:30 Notice: mpm-hs: Rule group caching - loaded: 0 newly cached: 0 total cacheable: 0
+[12 - RX#01] 2025-11-01 22:04:30 Info: pcap: Argument /pcaps/ was a directory
+[12 - RX#01] 2025-11-01 22:04:31 Info: pcap: Starting directory run for /pcaps/
+[12 - RX#01] 2025-11-01 22:04:31 Info: pcap: Processing pcaps directory /pcaps/, files must be newer than 0 and older than 18446744073709550616
+[1 - Suricata-Main] 2025-11-01 22:04:31 Notice: threads: Threads created -> RX: 1 W: 12 FM: 1 FR: 1   Engine started.
+[12 - RX#01] 2025-11-01 22:04:31 Info: pcap: Directory run mode complete
+[1 - Suricata-Main] 2025-11-01 22:04:31 Notice: suricata: Signal Received.  Stopping engine.
+[1 - Suricata-Main] 2025-11-01 22:04:31 Info: suricata: time elapsed 0.110s
+[12 - RX#01] 2025-11-01 22:04:31 Notice: pcap: read 0 files, 0 packets, 0 bytes
+[1 - Suricata-Main] 2025-11-01 22:04:31 Info: counters: Alerts: 0
+[1 - Suricata-Main] 2025-11-01 23:31:36 Notice: suricata: This is Suricata version 8.0.1 RELEASE running in USER mode
+[1 - Suricata-Main] 2025-11-01 23:31:36 Info: cpu: CPUs/cores online: 12
+[1 - Suricata-Main] 2025-11-01 23:31:36 Info: suricata: Setting engine mode to IDS mode by default
+[1 - Suricata-Main] 2025-11-01 23:31:36 Info: exception-policy: master exception-policy set to: auto
+[1 - Suricata-Main] 2025-11-01 23:31:36 Info: logopenfile: fast output device (regular) initialized: fast.log
+[1 - Suricata-Main] 2025-11-01 23:31:36 Info: logopenfile: eve-log output device (regular) initialized: eve.json
+[1 - Suricata-Main] 2025-11-01 23:31:36 Info: logopenfile: stats output device (regular) initialized: stats.log
+[1 - Suricata-Main] 2025-11-01 23:31:36 Warning: detect: No rule files match the pattern /var/lib/suricata/rules/suricata.rules
+[1 - Suricata-Main] 2025-11-01 23:31:36 Warning: detect: 1 rule files specified, but no rules were loaded!
+[1 - Suricata-Main] 2025-11-01 23:31:36 Info: threshold-config: Threshold config parsed: 0 rule(s) found
+[1 - Suricata-Main] 2025-11-01 23:31:36 Info: detect: 0 signatures processed. 0 are IP-only rules, 0 are inspecting packet payload, 0 inspect application layer, 0 are decoder event only
+[1 - Suricata-Main] 2025-11-01 23:31:36 Notice: mpm-hs: Rule group caching - loaded: 0 newly cached: 0 total cacheable: 0
+[12 - RX#01] 2025-11-01 23:31:36 Info: pcap: Starting file run for /project/victim_capture_20251102_031635.pcap
+[1 - Suricata-Main] 2025-11-01 23:31:36 Notice: threads: Threads created -> RX: 1 W: 12 FM: 1 FR: 1   Engine started.
+[12 - RX#01] 2025-11-01 23:31:36 Info: pcap: pcap file /project/victim_capture_20251102_031635.pcap end of file reached (pcap err code 0)
+[1 - Suricata-Main] 2025-11-01 23:31:36 Notice: suricata: Signal Received.  Stopping engine.
+[1 - Suricata-Main] 2025-11-01 23:31:36 Info: suricata: time elapsed 0.108s
+[12 - RX#01] 2025-11-01 23:31:36 Warning: pcap: 1/1th of packets have an invalid checksum, consider setting pcap-file.checksum-checks variable to no or use '-k none' option on command line.
+[12 - RX#01] 2025-11-01 23:31:36 Notice: pcap: read 1 file, 50 packets, 7973 bytes
+[1 - Suricata-Main] 2025-11-01 23:31:36 Info: counters: Alerts: 0
+[1 - Suricata-Main] 2025-11-01 23:50:48 Notice: suricata: This is Suricata version 8.0.1 RELEASE running in USER mode
+[1 - Suricata-Main] 2025-11-01 23:50:48 Info: cpu: CPUs/cores online: 12
+[1 - Suricata-Main] 2025-11-01 23:50:48 Info: suricata: Setting engine mode to IDS mode by default
+[1 - Suricata-Main] 2025-11-01 23:50:48 Info: exception-policy: master exception-policy set to: auto
+[1 - Suricata-Main] 2025-11-01 23:50:48 Info: logopenfile: fast output device (regular) initialized: fast.log
+[1 - Suricata-Main] 2025-11-01 23:50:48 Info: logopenfile: eve-log output device (regular) initialized: eve.json
+[1 - Suricata-Main] 2025-11-01 23:50:48 Info: logopenfile: stats output device (regular) initialized: stats.log
+[1 - Suricata-Main] 2025-11-01 23:50:48 Info: detect: 1 rule files processed. 3 rules successfully loaded, 0 rules failed, 0 rules skipped
+[1 - Suricata-Main] 2025-11-01 23:50:48 Info: threshold-config: Threshold config parsed: 0 rule(s) found
+[1 - Suricata-Main] 2025-11-01 23:50:48 Info: detect: 3 signatures processed. 0 are IP-only rules, 0 are inspecting packet payload, 3 inspect application layer, 0 are decoder event only
+[1 - Suricata-Main] 2025-11-01 23:50:48 Notice: mpm-hs: Rule group caching - loaded: 0 newly cached: 1 total cacheable: 1
+[12 - RX#01] 2025-11-01 23:50:48 Info: pcap: Starting file run for /project/victim_capture_20251102_031635.pcap
+[1 - Suricata-Main] 2025-11-01 23:50:48 Notice: threads: Threads created -> RX: 1 W: 12 FM: 1 FR: 1   Engine started.
+[12 - RX#01] 2025-11-01 23:50:48 Info: pcap: pcap file /project/victim_capture_20251102_031635.pcap end of file reached (pcap err code 0)
+[1 - Suricata-Main] 2025-11-01 23:50:48 Notice: suricata: Signal Received.  Stopping engine.
+[1 - Suricata-Main] 2025-11-01 23:50:49 Info: suricata: time elapsed 0.104s
+[12 - RX#01] 2025-11-01 23:50:49 Warning: pcap: 1/1th of packets have an invalid checksum, consider setting pcap-file.checksum-checks variable to no or use '-k none' option on command line.
+[12 - RX#01] 2025-11-01 23:50:49 Notice: pcap: read 1 file, 50 packets, 7973 bytes
+[1 - Suricata-Main] 2025-11-01 23:50:49 Info: counters: Alerts: 0
+[1 - Suricata-Main] 2025-11-01 23:55:49 Notice: suricata: This is Suricata version 8.0.1 RELEASE running in USER mode
+[1 - Suricata-Main] 2025-11-01 23:55:49 Info: cpu: CPUs/cores online: 12
+[1 - Suricata-Main] 2025-11-01 23:55:49 Info: suricata: Setting engine mode to IDS mode by default
+[1 - Suricata-Main] 2025-11-01 23:55:49 Info: exception-policy: master exception-policy set to: auto
+[1 - Suricata-Main] 2025-11-01 23:55:50 Info: logopenfile: fast output device (regular) initialized: fast.log
+[1 - Suricata-Main] 2025-11-01 23:55:50 Info: logopenfile: eve-log output device (regular) initialized: eve.json
+[1 - Suricata-Main] 2025-11-01 23:55:50 Info: logopenfile: stats output device (regular) initialized: stats.log
+[1 - Suricata-Main] 2025-11-01 23:55:50 Info: detect: 1 rule files processed. 3 rules successfully loaded, 0 rules failed, 0 rules skipped
+[1 - Suricata-Main] 2025-11-01 23:55:50 Info: threshold-config: Threshold config parsed: 0 rule(s) found
+[1 - Suricata-Main] 2025-11-01 23:55:50 Info: detect: 3 signatures processed. 0 are IP-only rules, 0 are inspecting packet payload, 3 inspect application layer, 0 are decoder event only
+[1 - Suricata-Main] 2025-11-01 23:55:50 Notice: mpm-hs: Rule group caching - loaded: 0 newly cached: 1 total cacheable: 1
+[12 - RX#01] 2025-11-01 23:55:50 Info: pcap: Starting file run for /project/victim_capture_20251102_031635.pcap
+[1 - Suricata-Main] 2025-11-01 23:55:50 Notice: threads: Threads created -> RX: 1 W: 12 FM: 1 FR: 1   Engine started.
+[12 - RX#01] 2025-11-01 23:55:50 Info: pcap: pcap file /project/victim_capture_20251102_031635.pcap end of file reached (pcap err code 0)
+[1 - Suricata-Main] 2025-11-01 23:55:50 Notice: suricata: Signal Received.  Stopping engine.
+[1 - Suricata-Main] 2025-11-01 23:55:50 Info: suricata: time elapsed 0.106s
+[12 - RX#01] 2025-11-01 23:55:50 Warning: pcap: 1/1th of packets have an invalid checksum, consider setting pcap-file.checksum-checks variable to no or use '-k none' option on command line.
+[12 - RX#01] 2025-11-01 23:55:50 Notice: pcap: read 1 file, 50 packets, 7973 bytes
+[1 - Suricata-Main] 2025-11-01 23:55:50 Info: counters: Alerts: 0
+[1 - Suricata-Main] 2025-11-02 00:01:13 Notice: suricata: This is Suricata version 8.0.1 RELEASE running in USER mode
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: cpu: CPUs/cores online: 12
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: suricata: Setting engine mode to IDS mode by default
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: exception-policy: master exception-policy set to: auto
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: logopenfile: fast output device (regular) initialized: fast.log
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: logopenfile: eve-log output device (regular) initialized: eve.json
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: logopenfile: stats output device (regular) initialized: stats.log
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: detect: 1 rule files processed. 2 rules successfully loaded, 0 rules failed, 0 rules skipped
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: threshold-config: Threshold config parsed: 0 rule(s) found
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: detect: 2 signatures processed. 1 are IP-only rules, 1 are inspecting packet payload, 0 inspect application layer, 0 are decoder event only
+[1 - Suricata-Main] 2025-11-02 00:01:13 Notice: mpm-hs: Rule group caching - loaded: 0 newly cached: 1 total cacheable: 1
+[12 - RX#01] 2025-11-02 00:01:13 Info: pcap: Starting file run for /project/victim_capture_20251102_031635.pcap
+[1 - Suricata-Main] 2025-11-02 00:01:13 Notice: threads: Threads created -> RX: 1 W: 12 FM: 1 FR: 1   Engine started.
+[12 - RX#01] 2025-11-02 00:01:13 Info: pcap: pcap file /project/victim_capture_20251102_031635.pcap end of file reached (pcap err code 0)
+[1 - Suricata-Main] 2025-11-02 00:01:13 Notice: suricata: Signal Received.  Stopping engine.
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: suricata: time elapsed 0.105s
+[12 - RX#01] 2025-11-02 00:01:13 Warning: pcap: 1/1th of packets have an invalid checksum, consider setting pcap-file.checksum-checks variable to no or use '-k none' option on command line.
+[12 - RX#01] 2025-11-02 00:01:13 Notice: pcap: read 1 file, 50 packets, 7973 bytes
+[1 - Suricata-Main] 2025-11-02 00:01:13 Info: counters: Alerts: 4

@@ -1,0 +1,85 @@
+﻿{
+    "status":  "success",
+    "data":  {
+                 "activeTargets":  [
+                                       {
+                                           "discoveredLabels":  {
+                                                                    "__address__":  "http://victim:8080/",
+                                                                    "__metrics_path__":  "/probe",
+                                                                    "__param_module":  "http_2xx",
+                                                                    "__scheme__":  "http",
+                                                                    "__scrape_interval__":  "15s",
+                                                                    "__scrape_timeout__":  "10s",
+                                                                    "job":  "blackbox"
+                                                                },
+                                           "labels":  {
+                                                          "instance":  "http://victim:8080/",
+                                                          "job":  "blackbox"
+                                                      },
+                                           "scrapePool":  "blackbox",
+                                           "scrapeUrl":  "http://blackbox:9115/probe?module=http_2xx\u0026target=http%3A%2F%2Fvictim%3A8080%2F",
+                                           "globalUrl":  "http://blackbox:9115/probe?module=http_2xx\u0026target=http%3A%2F%2Fvictim%3A8080%2F",
+                                           "lastError":  "",
+                                           "lastScrape":  "2025-11-02T15:24:01.017251453Z",
+                                           "lastScrapeDuration":  0.003422344,
+                                           "health":  "up",
+                                           "scrapeInterval":  "15s",
+                                           "scrapeTimeout":  "10s"
+                                       },
+                                       {
+                                           "discoveredLabels":  {
+                                                                    "__address__":  "cadvisor:8080",
+                                                                    "__metrics_path__":  "/metrics",
+                                                                    "__scheme__":  "http",
+                                                                    "__scrape_interval__":  "15s",
+                                                                    "__scrape_timeout__":  "10s",
+                                                                    "job":  "cadvisor"
+                                                                },
+                                           "labels":  {
+                                                          "instance":  "cadvisor:8080",
+                                                          "job":  "cadvisor"
+                                                      },
+                                           "scrapePool":  "cadvisor",
+                                           "scrapeUrl":  "http://cadvisor:8080/metrics",
+                                           "globalUrl":  "http://cadvisor:8080/metrics",
+                                           "lastError":  "",
+                                           "lastScrape":  "2025-11-02T15:23:59.545573962Z",
+                                           "lastScrapeDuration":  0.019628763,
+                                           "health":  "up",
+                                           "scrapeInterval":  "15s",
+                                           "scrapeTimeout":  "10s"
+                                       },
+                                       {
+                                           "discoveredLabels":  {
+                                                                    "__address__":  "prometheus:9090",
+                                                                    "__metrics_path__":  "/metrics",
+                                                                    "__scheme__":  "http",
+                                                                    "__scrape_interval__":  "15s",
+                                                                    "__scrape_timeout__":  "10s",
+                                                                    "job":  "prometheus"
+                                                                },
+                                           "labels":  {
+                                                          "instance":  "prometheus:9090",
+                                                          "job":  "prometheus"
+                                                      },
+                                           "scrapePool":  "prometheus",
+                                           "scrapeUrl":  "http://prometheus:9090/metrics",
+                                           "globalUrl":  "http://prometheus:9090/metrics",
+                                           "lastError":  "",
+                                           "lastScrape":  "2025-11-02T15:24:08.381138749Z",
+                                           "lastScrapeDuration":  0.018199216,
+                                           "health":  "up",
+                                           "scrapeInterval":  "15s",
+                                           "scrapeTimeout":  "10s"
+                                       }
+                                   ],
+                 "droppedTargets":  [
+
+                                    ],
+                 "droppedTargetCounts":  {
+                                             "blackbox":  0,
+                                             "cadvisor":  0,
+                                             "prometheus":  0
+                                         }
+             }
+}

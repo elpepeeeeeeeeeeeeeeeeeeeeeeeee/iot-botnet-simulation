@@ -1,0 +1,13 @@
+Instructions
+
+What to open before running the scripts (recommended tabs)
+
+Open four PowerShell windows (Administrator). Label them so you won’t get confused:
+
+Admin (top-left) — for starting/stopping the compose stack and running the start_all.ps1. This is the tab where you’ll run the start script.
+
+MQTT (top-right) — for publishing do_attack and running mosquitto_sub if you want to watch telemetry.
+
+C2 logs (bottom-left) — run docker logs -f iot-botnet-simulation-c2-1 --tail=200 to watch C2 in real time.
+
+victim logs (bottom-right) — run docker logs -f victim --tail=200 to watch victim HTTP access logs.

@@ -1,0 +1,31 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  # scrape Prometheus itself (service DNS works on bridge)
+  - job_name: prometheus
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  # scrape cAdvisor via service DNS (not the host port)
+  - job_name: cadvisor
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  # probe the victim running on host-mode @ 8080 from *inside* Docker:
+  # use host.docker.internal to reach your Windows host
+  - job_name: blackbox_http_victim
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://host.docker.internal:8080/
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox:9115

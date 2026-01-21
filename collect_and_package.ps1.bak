@@ -1,0 +1,210 @@
+<#
+.SYNOPSIS
+  Collect packet capture, counts, logs, and package into zip for IoT-sim project.
+
+.DESCRIPTION
+  - Finds latest victim_capture*.pcap in project folder (or copies from victim container /tmp if not found)
+  - Uses tshark (if available) to count frames, HTTP GETs and HTTP 200 responses
+  - Optionally writes filtered pcaps (HTTP-only and GET-only)
+  - Collects docker logs for typical container names (if running)
+  - Packages results into iot-sim-results_<timestamp>.zip
+
+.PARAMETER ProjectPath
+  Path to project folder. Default: current directory.
+
+.PARAMETER IncludeLogs
+  If set, script gathers docker logs for common container names and saves them.
+
+.PARAMETER CreateFilteredPcaps
+  If set, script creates `victim_http_only.pcap` and `victim_gets.pcap` (requires tshark).
+
+.EXAMPLE
+  PS> .\collect_and_package.ps1 -ProjectPath "M:\CCNS project work\project\iot-botnet-simulation" -IncludeLogs -CreateFilteredPcaps
+#>
+
+param(
+    [string]$ProjectPath = (Get-Location).Path,
+    [switch]$IncludeLogs,
+    [switch]$CreateFilteredPcaps
+)
+
+function Write-Info($s){ Write-Host $s -ForegroundColor Cyan }
+function Write-Succ($s){ Write-Host $s -ForegroundColor Green }
+function Write-Warn($s){ Write-Host $s -ForegroundColor Yellow }
+function Write-Err($s){ Write-Host $s -ForegroundColor Red }
+
+Set-StrictMode -Version Latest
+Push-Location $ProjectPath
+
+Write-Info "Project path: $ProjectPath"
+
+# 1) Find existing pcap in project folder
+$pcap = Get-ChildItem -Path $ProjectPath -Filter "victim_capture*.pcap" -File -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1
+
+if (-not $pcap) {
+    Write-Warn "No local victim_capture*.pcap found in $ProjectPath. Attempting to copy from a running 'victim' container (if present)."
+    # find container with name 'victim' in docker ps
+    $victimName = (& docker ps --format "{{.Names}}" | Where-Object { $_ -match "victim" } | Select-Object -First 1)
+    if (-not $victimName) {
+        Write-Err "No local pcap and no container with name containing 'victim' found. Exiting."
+        Pop-Location
+        exit 1
+    }
+
+    Write-Info "Found container: $victimName. Listing /tmp for victim_capture files..."
+    $ls = & docker exec $victimName sh -c "ls -1 /tmp | grep victim_capture || true"
+    if (-not $ls) {
+        Write-Err "No victim_capture files found inside container $victimName:/tmp. Exiting."
+        Pop-Location
+        exit 1
+    }
+
+    # pick latest by lexical (ls output) then copy
+    $remoteFile = ($ls -split "`n" | Sort-Object | Select-Object -Last 1).Trim()
+    $remotePath = "/tmp/$remoteFile"
+    $localPath = Join-Path $ProjectPath $remoteFile
+    Write-Info "Copying $victimName:$remotePath -> $localPath ..."
+    try {
+        & docker cp "$($victimName):$remotePath" "$localPath"
+    } catch {
+        Write-Err "docker cp failed: $_"
+        Pop-Location
+        exit 1
+    }
+    $pcap = Get-Item $localPath
+    Write-Succ "Copied pcap to $($pcap.FullName)"
+} else {
+    Write-Succ "Found local pcap: $($pcap.FullName)"
+}
+
+# 2) Locate tshark (preferred) and capinfos (optional)
+$tsharkCmd = (Get-Command tshark.exe -ErrorAction SilentlyContinue).Source
+if (-not $tsharkCmd) {
+    # try default Wireshark install path
+    $candidate = "C:\Program Files\Wireshark\tshark.exe"
+    if (Test-Path $candidate) { $tsharkCmd = $candidate }
+}
+
+$capinfosCmd = (Get-Command capinfos.exe -ErrorAction SilentlyContinue).Source
+if (-not $capinfosCmd) {
+    $candidate2 = "C:\Program Files\Wireshark\capinfos.exe"
+    if (Test-Path $candidate2) { $capinfosCmd = $candidate2 }
+}
+
+if ($capinfosCmd) {
+    Write-Info "Running capinfos to gather file metadata..."
+    try { & $capinfosCmd -a $pcap.FullName } catch { Write-Warn "capinfos failed: $_" }
+}
+
+# 3) Get counts (tshark preferred)
+$totalPackets = $null; $httpGets = $null; $http200 = $null
+if ($tsharkCmd) {
+    Write-Info "Counting packets with tshark: $tsharkCmd"
+    try {
+        $totalPackets = (& $tsharkCmd -r $pcap.FullName -T fields -e frame.number | Measure-Object -Line).Lines
+        $httpGets     = (& $tsharkCmd -r $pcap.FullName -Y 'http.request.method == "GET"' -T fields -e frame.number | Measure-Object -Line).Lines
+        $http200      = (& $tsharkCmd -r $pcap.FullName -Y 'http.response.code == 200' -T fields -e frame.number | Measure-Object -Line).Lines
+        Write-Succ "Counts: total=$totalPackets, GETs=$httpGets, 200s=$http200"
+    } catch {
+        Write-Warn "tshark counting failed: $_"
+    }
+} else {
+    Write-Warn "tshark not found. Install Wireshark/tshark if you want automated packet counts and filtered pcaps."
+}
+
+# 4) Create filtered pcaps if requested and tshark available
+$filteredHttpPcap = $null; $filteredGetsPcap = $null
+if ($CreateFilteredPcaps) {
+    if (-not $tsharkCmd) {
+        Write-Warn "Can't create filtered pcaps because tshark is not available."
+    } else {
+        $filteredHttpPcap = Join-Path $ProjectPath "victim_http_only.pcap"
+        $filteredGetsPcap = Join-Path $ProjectPath "victim_gets.pcap"
+        Write-Info "Writing HTTP-only pcap to $filteredHttpPcap ..."
+        try { & $tsharkCmd -r $pcap.FullName -Y "http" -w $filteredHttpPcap } catch { Write-Warn "failed: $_" }
+        Write-Info "Writing GET-only pcap to $filteredGetsPcap ..."
+        try { & $tsharkCmd -r $pcap.FullName -Y 'http.request.method == "GET"' -w $filteredGetsPcap } catch { Write-Warn "failed: $_" }
+    }
+}
+
+# 5) Collect docker logs if requested
+$collectedLogFiles = @()
+if ($IncludeLogs) {
+    Write-Info "Collecting docker logs for common containers (if running)..."
+    # Candidate container name patterns (previous runs used these names)
+    $candidates = @('iot-botnet-simulation-c2-1','iot-botnet-simulation-device-1','mosquitto','victim','victim_1','c2-server','device')
+    $runningNames = & docker ps --format "{{.Names}}" | ForEach-Object { $_.Trim() }
+
+    foreach ($name in $candidates) {
+        $match = $runningNames | Where-Object { $_ -like "*$name*" } | Select-Object -First 1
+        if ($match) {
+            $outFile = Join-Path $ProjectPath ("$($match)_logs.txt")
+            Write-Info "Saving logs for container '$match' -> $outFile"
+            try {
+                & docker logs $match > $outFile 2>&1
+                $collectedLogFiles += $outFile
+            } catch {
+                Write-Warn "Failed to collect logs for $match: $_"
+            }
+        }
+    }
+    if (-not $collectedLogFiles) { Write-Warn "No matching containers found or no logs saved." }
+}
+
+# 6) Also save some common project log files if present
+$maybeLogs = @("c2_logs.txt","device_logs.txt","mosquitto_logs.txt","victim_logs.txt")
+foreach ($f in $maybeLogs) {
+    $full = Join-Path $ProjectPath $f
+    if (Test-Path $full) {
+        $collectedLogFiles += $full
+    }
+}
+
+# 7) Create results zip
+$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$zipName = Join-Path $ProjectPath "iot-sim-results_$timestamp.zip"
+
+# assemble list of files to include
+$toZip = @()
+$toZip += $pcap.FullName
+if ($filteredHttpPcap -and (Test-Path $filteredHttpPcap)) { $toZip += $filteredHttpPcap }
+if ($filteredGetsPcap -and (Test-Path $filteredGetsPcap)) { $toZip += $filteredGetsPcap }
+$toZip += $collectedLogFiles
+# include any other _logs.txt in project folder (optional)
+$moreLogFiles = Get-ChildItem -Path $ProjectPath -Filter "*_logs.txt" -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
+$toZip += $moreLogFiles
+
+$toZip = $toZip | Where-Object { $_ } | Select-Object -Unique
+
+if ($toZip.Count -eq 0) {
+    Write-Warn "Nothing to zip. Exiting."
+    Pop-Location
+    exit 1
+}
+
+Write-Info "Creating results zip: $zipName"
+try {
+    Compress-Archive -Path $toZip -DestinationPath $zipName -Force
+    Write-Succ "Created results zip: $zipName"
+} catch {
+    Write-Err "Failed to create zip: $_"
+}
+
+# 8) Print short summary
+Write-Host ""
+Write-Host "=== Summary ===" -ForegroundColor Cyan
+Write-Host "Project folder: $ProjectPath"
+Write-Host "pcap: $($pcap.Name)"
+if ($totalPackets) { Write-Host "Total packets: $totalPackets" } else { Write-Host "Total packets: (tshark not available or failed)" }
+if ($httpGets) { Write-Host "HTTP GETs: $httpGets" }
+if ($http200) { Write-Host "HTTP 200 responses: $http200" }
+if ($filteredHttpPcap) { Write-Host "HTTP-only pcap: $filteredHttpPcap" }
+if ($filteredGetsPcap) { Write-Host "GET-only pcap: $filteredGetsPcap" }
+if ($collectedLogFiles.Count -gt 0) {
+    Write-Host "Collected logs:"
+    $collectedLogFiles | ForEach-Object { Write-Host "  $_" }
+}
+Write-Host "Results zip: $zipName"
+
+Pop-Location

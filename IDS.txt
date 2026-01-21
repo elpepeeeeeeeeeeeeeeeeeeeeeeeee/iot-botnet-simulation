@@ -1,0 +1,25 @@
+IDS
+
+# Set paths
+$proj = "M:\CCNS project work\project\iot-botnet-simulation"
+
+# Try to find a pcap in root first, otherwise in pcaps\
+$pcapRoot  = (Get-ChildItem "$proj\*.pcap" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).Name
+$pcapPcaps = (Get-ChildItem "$proj\pcaps\*.pcap" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).Name
+
+if ($pcapRoot) {
+  $pcapInContainer = "/project/$pcapRoot"
+  Write-Host "Using pcap (root): $pcapRoot"
+} elseif ($pcapPcaps) {
+  $pcapInContainer = "/project/pcaps/$pcapPcaps"
+  Write-Host "Using pcap (pcaps): $pcapPcaps"
+} else {
+  throw "No .pcap found in $proj or $proj\pcaps"
+}
+
+# Mount project root (covers both locations) and suricata-output
+docker run --rm `
+  --mount type=bind,source="$proj",target=/project `
+  --mount type=bind,source="$proj\suricata-output",target=/output `
+  jasonish/suricata:latest `
+  suricata -r "$pcapInContainer" -l /output

@@ -1,0 +1,37 @@
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mosquitto
+    network_mode: "host"
+    volumes:
+      - ./mosquitto-config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    restart: unless-stopped
+
+  device:
+    build: ./device
+    image: iot-device:latest
+    environment:
+      - MQTT_HOST=127.0.0.1
+      - MQTT_PORT=1883
+      - VICTIM_HOST=127.0.0.1
+      - VICTIM_PORT=8080
+    network_mode: "host"
+    restart: unless-stopped
+
+  c2:
+    build: ./c2
+    image: c2-server:latest
+    environment:
+      - MQTT_HOST=127.0.0.1
+      - MQTT_PORT=1883
+    network_mode: "host"
+    restart: unless-stopped
+
+  victim:
+    image: python:3.10-slim
+    container_name: victim
+    network_mode: "host"
+    command: >
+      sh -c "python3 -m http.server 8080"
+    restart: unless-stopped

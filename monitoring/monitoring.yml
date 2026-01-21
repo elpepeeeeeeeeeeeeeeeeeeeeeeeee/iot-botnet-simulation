@@ -1,0 +1,63 @@
+
+services:
+  mosquitto-exporter:
+    image: sapcc/mosquitto-exporter:latest
+    container_name: mosquitto-exporter
+    command:
+      - --endpoint=tcp://host.docker.internal:1883
+      - --bind-address=0.0.0.0:9234
+    ports:
+      - "9234:9234"
+    networks:
+      - default
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prom
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - default
+    restart: unless-stopped
+    depends_on:
+      - mosquitto-exporter
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: graf
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    networks:
+      - default
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    command: ["--docker_only=true"]
+    volumes:
+      - /:/rootfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - default
+    restart: unless-stopped
+
+networks:
+  default:
+    name: iot-botnet-simulation_default
+    external: true
+
